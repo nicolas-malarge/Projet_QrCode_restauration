@@ -3,11 +3,14 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define TAILLE_CHAINE   256
 
 int main()
-{   char tube_serveur[TAILLE_CHAINE]="tube_serveur.fifo";
+{   char * tube_serveur="/tmp/myfifo";
     int sortieTube;
     int entree_tube;
     char chaineALire[TAILLE_CHAINE];
@@ -15,7 +18,9 @@ int main()
     char *mot;/* mot que le client veut tester si c'est un palindrome ou non */
 
     /***************** création tube serveur **********************/
-    if(mkfifo(tube_serveur, 0644) != 0)
+    
+    int fd = open(mkfifo(tube_serveur, 0666), O_RDONLY);
+    if(fd == -1)
     {   fprintf(stderr, "Impossible de créer le tube nommé.\n");
         exit(EXIT_FAILURE);
     }
