@@ -12,6 +12,19 @@ struct Client {
     char prenom[20];
 };
 
+struct Menu {
+    int idMenu;
+    char plat[30];
+    double prix;
+
+};
+
+void afficherMenu(struct Menu pMenu){
+    printf("Plat : %s ........ Prix : %d euros\n", pMenu.plat, pMenu.prix);
+}
+
+
+
 int main() {
     struct Serveur s1;
     struct Serveur s2;
