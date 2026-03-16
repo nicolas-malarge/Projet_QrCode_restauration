@@ -20,7 +20,6 @@ struct Menu {
 };
 
 void afficherMenu(struct Menu pMenu){
-    //for plat in Menu:
     printf("Plat : %s ........ Prix : %f euros\n", pMenu.plat, pMenu.prix);
 }
 
@@ -30,6 +29,7 @@ int main() {
     struct Serveur s1;
     struct Serveur s2;
     struct Client c1;
+    struct Menu[] m1;
 
     s1.idServeur = 1;
     strcpy(s1.nom, "restaurant 1");
@@ -40,6 +40,8 @@ int main() {
     c1.idClient = 1;
     strcpy(c1.nom, "MALARGE");
     strcpy(c1.prenom, "Nicolas");
+
+    //m1.append( )
 
     printf("Nom serveur : %s\n", s1.nom);
     printf("Identifiant serveur : %d\n", s1.idServeur);
