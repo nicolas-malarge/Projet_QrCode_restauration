@@ -19,14 +19,14 @@ struct Plat {
 };
 
 void afficherMenu(struct Plat pPlat){
-    printf("Plat : %s ........ Prix : %f euros\n",pPlat.plat, pPlat.prix);
+    printf("Plat : %s ........ Prix : %f euros\n", pPlat.plat, pPlat.prix);
+
     //int j;
     //    while (pPlat.plat[j]!='\0'){
     //        printf("%c", pPlat.plat[j]);
     //        j++;
     //    }
     //printf("%s\n", pPlat.plat);
-    
 }
 
 void ajoutStruct(struct Plat pPlat[], int pId, char pNomPlat, double pPrix){
