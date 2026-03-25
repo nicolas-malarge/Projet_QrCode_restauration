@@ -1,29 +1,35 @@
-# include <arpa/inet.h> // for inet_addr
-# include <netinet/in.h> // for sockaddr_in , htons , IPPROTO_TCP , in_addr
-# include <stdio.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <errno.h>
+// for open , O_RDONLY , O_WRONLY
 // for printf
-# include <sys/socket.h> // for connect , socket , AF_INET , SOCK_STREAM
-# include <unistd.h>// for close
-# define NB_CLIENTS 2
-# define IP "127.0.0.3"
-# define PORT 8080
+// for mkfifo
+// for read , write
+# define BUFFER_SIZE 512
+# define ServerE "serverE.tube"
+# define ClientS "clientS.tube"
 
 int main () {
-    struct sockaddr_in adresse ;
-        adresse.sin_family = AF_INET ;
-        // IPv4
-        adresse.sin_addr.s_addr = inet_addr ( IP ) ; // L adresse du serveur
-        adresse.sin_port = htons ( PORT ) ;
-    // Le port sur le serveur
-    int fdsocket = socket ( AF_INET , SOCK_STREAM , IPPROTO_TCP ) ; // TCP
-    if ( fdsocket == -1) {
-        return 0;
-    }
+    char buffer[100];
 
-    int result = connect ( fdsocket , ( struct sockaddr *) & adresse , sizeof( adresse ) ) ;
-    if ( result != 0) {
-        return 0;
-    }
-    printf (" Connecte \n") ;
-    close ( fdsocket ) ;
+    
+    int fd_write = open(ServerE, O_WRONLY);
+
+    char *message = "Voir le menu";
+    write(fd_write, message, sizeof(message) + 1);
+
+    close(fd_write);
+
+    
+    int fd_read = open(ClientS, O_RDONLY);
+    read(fd_read, buffer, sizeof(buffer));
+
+    printf("Réponse du serveur :\n%s\n", buffer);
+
+    close(fd_read);
+
+    return 0;
 }
