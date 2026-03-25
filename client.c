@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 // for open , O_RDONLY , O_WRONLY
 // for printf
 // for mkfifo
@@ -13,7 +14,7 @@
 # define ClientS "clientS.tube"
 
 int main () {
-    char buffer[100];
+    char buffer[512];
 
     
     int fd_write = open(ServerE, O_WRONLY);
@@ -23,8 +24,9 @@ int main () {
         return 0;
     }
 
-    char *message = "Voir le menu";
-    write(fd_write, message, sizeof(message) + 1);
+    char * message = "Voir le menu";
+    printf("%ld", sizeof(message) );
+    write(fd_write, message, strlen(message));
 
     close(fd_write);
 
