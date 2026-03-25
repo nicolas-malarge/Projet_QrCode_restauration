@@ -9,7 +9,7 @@
 // for mkfifo
 // for read , write
 # define BUFFER_SIZE 512
-# define ServerE "serverE.tube"
+# define ServerE "ServerE.tube"
 # define ClientS "clientS.tube"
 
 int main () {
@@ -17,6 +17,11 @@ int main () {
 
     
     int fd_write = open(ServerE, O_WRONLY);
+
+    if ( fd_write == -1) {
+        printf ( " Ne peut ouvrir ’%s’\n " , ServerE ) ;
+        return 0;
+    }
 
     char *message = "Voir le menu";
     write(fd_write, message, sizeof(message) + 1);
