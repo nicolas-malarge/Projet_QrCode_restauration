@@ -23,6 +23,10 @@ int main () {
 
     
     int fd_read = open(ServerE, O_RDONLY);
+    if ( fd_read == -1) {
+        printf ( " Ne peut ouvrir ’%s ’\n " , ServerE ) ;
+        return 0;
+    }
     read(fd_read, buffer, sizeof(buffer));
 
     printf("Commande reçue : %s\n", buffer);
@@ -32,7 +36,7 @@ int main () {
     
     int fd_write = open(ClientS, O_WRONLY);
 
-    char *menu = "Menu:\n1. Pizza\n2. Burger\n3. Salade\n";
+    char *menu = "Menu:\n1. Le classique\n2. Burger country\n3. Buffalo\n4. Le Royal \n5. Le Burkid\n";
     write(fd_write, menu, sizeof(menu) + 1);
 
     close(fd_write);
