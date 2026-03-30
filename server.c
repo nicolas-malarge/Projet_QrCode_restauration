@@ -18,34 +18,30 @@
 
 
 int main () {
-    char buffer [ BUFFER_SIZE ];
+    char buffer[512];
 
-    mkfifo(S2C, 0666);
     mkfifo(C2S, 0666);
-    mkfifo(S2D, 0666);
-    mkfifo(D2S, 0666);
+    mkfifo(S2C, 0666);
 
-    printf("Serveur en attente du client...\n");
+    printf("En attente du client...\n");
 
-    
-    int fd_read = open(S2C, O_RDONLY);
-    if ( fd_read == -1) {
-        printf ( " Ne peut ouvrir ’%s ’\n " , S2C ) ;
-        return 0;
-    }
-    read(fd_read, buffer, sizeof(&buffer));
+    int fd_c2s = open(C2S, O_RDONLY);
+    read(fd_c2s, buffer, sizeof(buffer));
+    printf("Le client demande: %s\n", buffer);
+    close(fd_c2s);
 
-    printf("Commande reçue : %s\n", buffer);
+    int fd_s2d = open(S2D, O_WRONLY);
+    write(fd_s2d, "REQ_MENU", 9);
+    close(fd_s2d);
 
-    close(fd_read);
+    int fd_d2s = open(D2S, O_RDONLY);
+    read(fd_d2s, buffer, sizeof(buffer));
+    close(fd_d2s);
 
-    
-    int fd_write = open(C2S, O_WRONLY);
+    int fd_s2c = open(S2C, O_WRONLY);
+    write(fd_s2c, buffer, strlen(buffer) + 1);
+    close(fd_s2c);
 
-    char *menu = "Menu:\n1. Le classique\n2. Burger country\n3. Buffalo\n4. Le Royal \n5. Le Burkid\n";
-    write(fd_write, menu, strlen(menu));
-
-    close(fd_write);
-
+    printf(" Menu transmis au client.\n");
     return 0;
 }
