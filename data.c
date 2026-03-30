@@ -1,5 +1,14 @@
 #include <stdio.h>
 #include <string.h> 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <errno.h>
+
+# define BUFFER_SIZE 512
+# define D2S "D2S.tube"
+# define S2D "S2D.tube"
 
 struct Serveur {
     int idServeur;
@@ -32,39 +41,21 @@ void ajoutStruct(struct Plat pPlat[], int pId, char* pNomPlat, double pPrix){
 }
 
 int main() {
-    struct Serveur s1;
-    struct Serveur s2;
-    struct Client c1;
-    struct Plat menu1[100];
+    char buffer[512];
+    char *menu = " 1. Classique (14 euros)\n 2. Country (16 euros)\n 3. Buffalo (16 euros)\n ";
 
-    ajoutStruct(menu1, 1, "Le Classique..", 14.0);
-    ajoutStruct(menu1, 2, "Burger Country", 16.0);
-    ajoutStruct(menu1, 3, "Burger Buffalo", 16.0);
-    ajoutStruct(menu1, 4, "Le Royal......", 18.0);
-    ajoutStruct(menu1, 5, "Le BurKid.....", 8.0);
+    mkfifo(S2D, 0666);
+    mkfifo(D2S, 0666);
 
-    s1.idServeur = 1;
-    strcpy(s1.nom, "Burger Happy");
+    printf("En attente de requetes...\n");
 
-    s2.idServeur = 2;
-    strcpy(s2.nom, "Happy Sushi");
+    int fd_in = open(S2D, O_RDONLY);
+    read(fd_in, buffer, sizeof(buffer));
+    printf("[DATA] Reçu du serveur: %s\n", buffer);
+    close(fd_in);
 
-    c1.idClient = 1;
-    strcpy(c1.nom, "MALARGE");
-    strcpy(c1.prenom, "Nicolas");
-
-    printf("Nom serveur : %s\n", s1.nom);
-    printf("Identifiant serveur : %d\n", s1.idServeur);
-
-    printf("Nom serveur : %s\n", s2.nom);
-    printf("Identifiant serveur : %d\n", s2.idServeur);
-
-    printf("Nom client : %s\n", c1.nom);
-    printf("Prenom client : %s\n", c1.prenom);
-
-    for(int i = 1; i < 6; i++){
-
-        afficherMenu(menu1[i]);
-    }
+    int fd_out = open(D2S, O_WRONLY);
+    write(fd_out, menu, strlen(menu) + 1);
+    close(fd_out);
     return 0;
 }
