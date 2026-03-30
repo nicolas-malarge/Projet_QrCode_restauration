@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h> 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -41,8 +42,33 @@ void ajoutStruct(struct Plat pPlat[], int pId, char* pNomPlat, double pPrix){
 }
 
 int main() {
+
+    struct Plat menuBurgerHappy[100];
+    struct Plat menuHappySushi[100];
+    struct Plat menu3[100];
+
+    ajoutStruct(menuBurgerHappy, 0, "Le Classique..", 14.0);
+    ajoutStruct(menuBurgerHappy, 1, "Burger Country", 16.0);
+    ajoutStruct(menuBurgerHappy, 2, "Burger Buffalo", 16.0);
+    ajoutStruct(menuBurgerHappy, 3, "Le Royal......", 18.0);
+    ajoutStruct(menuBurgerHappy, 4, "Le BurKid.....", 8.0);
+
+    // ajoutStruct(menuHappySushi, 0, "Suchi Saumon......", 8);
+    // ajoutStruct(menuHappySushi, 1, "Suchi Crevettes...", 6);
+    // ajoutStruct(menuHappySushi, 2, "Suchi Thon........", 7);
+    // ajoutStruct(menuHappySushi, 3, "Suchi Saumon...", 8);
+
     char buffer[512];
-    char *menu = " 1. Classique (14 euros)\n 2. Country (16 euros)\n 3. Buffalo (16 euros)\n ";
+    char nPlat[200];
+    char menu1[1024] = "";
+    for(int i = 0; i < 5; i++){
+        struct Plat vPlat = menuBurgerHappy[i];
+        sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
+        strcat(menu1, nPlat);
+    }
+
+    //char menu2[] = "";
+    //for(int i =0; )
 
     mkfifo(S2D, 0666);
     mkfifo(D2S, 0666);
@@ -55,7 +81,7 @@ int main() {
     close(fd_in);
 
     int fd_out = open(D2S, O_WRONLY);
-    write(fd_out, menu, strlen(menu) + 1);
+    write(fd_out, menu1, strlen(menu1) + 1);
     close(fd_out);
     return 0;
 }
