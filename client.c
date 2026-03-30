@@ -23,44 +23,7 @@ int main () {
 
     int fd_in = open(S2C, O_RDONLY);
     read(fd_in, buffer, sizeof(buffer));
-    printf("[CLIENT] Menu reçu :\n%s\n", buffer);
+    printf("Menu reçu :\n%s\n", buffer);
     close(fd_in);
-    
-    // char buffer[512];
-    // char myFOOD[30];
-
-    
-    // int fd_write = open(S2C, O_WRONLY);
-
-    // if ( fd_write == -1) {
-    //     printf ( " Ne peut ouvrir ’%s’\n " , S2C ) ;
-    //     return 0;
-    // }
-
-    // char * message = "Voir le menu";
-    // printf("%ld", sizeof(message) );
-    // write(fd_write, message, strlen(message));
-
-    // close(fd_write);
-
-    
-    // int fd_read = open(C2S, O_RDONLY);
-    // read(fd_read, buffer, sizeof(buffer));
-
-    // printf("Réponse du serveur :\n%s\n", buffer);
-
-    // close(fd_read);
-    //int fd_write2 = open(S2C, O_WRONLY);
-
-    //if ( fd_write == -1) {
-        //printf ( " Ne peut ouvrir ’%s’\n " , S2C ) ;
-        //return 0;
-    //}
-
-    //scanf("%ld", &myFOOD);
-    //write(fd_write2, myFOOD, strlen(myFOOD));
-
-    //close(fd_write2);
-
     return 0;
 }
