@@ -15,29 +15,41 @@
 
 int main () {
     char buffer[512];
-    char myFOOD[30];
+
+    int fd_out = open(C2S, O_WRONLY);
+    char *msg = "Afficher le menu svp";
+    write(fd_out, msg, strlen(msg) + 1);
+    close(fd_out);
+
+    int fd_in = open(S2C, O_RDONLY);
+    read(fd_in, buffer, sizeof(buffer));
+    printf("[CLIENT] Menu reçu :\n%s\n", buffer);
+    close(fd_in);
+    
+    // char buffer[512];
+    // char myFOOD[30];
 
     
-    int fd_write = open(S2C, O_WRONLY);
+    // int fd_write = open(S2C, O_WRONLY);
 
-    if ( fd_write == -1) {
-        printf ( " Ne peut ouvrir ’%s’\n " , S2C ) ;
-        return 0;
-    }
+    // if ( fd_write == -1) {
+    //     printf ( " Ne peut ouvrir ’%s’\n " , S2C ) ;
+    //     return 0;
+    // }
 
-    char * message = "Voir le menu";
-    printf("%ld", sizeof(message) );
-    write(fd_write, message, strlen(message));
+    // char * message = "Voir le menu";
+    // printf("%ld", sizeof(message) );
+    // write(fd_write, message, strlen(message));
 
-    close(fd_write);
+    // close(fd_write);
 
     
-    int fd_read = open(C2S, O_RDONLY);
-    read(fd_read, buffer, sizeof(buffer));
+    // int fd_read = open(C2S, O_RDONLY);
+    // read(fd_read, buffer, sizeof(buffer));
 
-    printf("Réponse du serveur :\n%s\n", buffer);
+    // printf("Réponse du serveur :\n%s\n", buffer);
 
-    close(fd_read);
+    // close(fd_read);
     //int fd_write2 = open(S2C, O_WRONLY);
 
     //if ( fd_write == -1) {
