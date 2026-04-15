@@ -1,3 +1,4 @@
+//data.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> 
@@ -53,10 +54,11 @@ int main() {
     ajoutStruct(menuBurgerHappy, 3, "Le Royal......", 18.0);
     ajoutStruct(menuBurgerHappy, 4, "Le BurKid.....", 8.0);
 
-    // ajoutStruct(menuHappySushi, 0, "Suchi Saumon......", 8);
-    // ajoutStruct(menuHappySushi, 1, "Suchi Crevettes...", 6);
-    // ajoutStruct(menuHappySushi, 2, "Suchi Thon........", 7);
-    // ajoutStruct(menuHappySushi, 3, "Suchi Saumon...", 8);
+    ajoutStruct(menuHappySushi, 0, "Suchi Saumon......", 8);
+    ajoutStruct(menuHappySushi, 1, "Suchi Crevettes...", 6);
+    ajoutStruct(menuHappySushi, 2, "Suchi Thon........", 7);
+    ajoutStruct(menuHappySushi, 3, "Suchi Magicarpe...", 8);
+    ajoutStruct(menuHappySushi, 4, "Suchi Brochet.....", 8);
 
     char buffer[512];
     char nPlat[200];
@@ -67,8 +69,12 @@ int main() {
         strcat(menu1, nPlat);
     }
 
-    //char menu2[] = "";
-    //for(int i =0; )
+    char menu2[1024] = ""; 
+    for(int i = 0; i < 5; i++){
+        struct Plat vPlat = menuHappySushi[i];
+        sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
+        strcat(menu2, nPlat);
+    }
 
     mkfifo(S2D, 0666);
     mkfifo(D2S, 0666);
@@ -77,11 +83,19 @@ int main() {
 
     int fd_in = open(S2D, O_RDONLY);
     read(fd_in, buffer, sizeof(buffer));
-    printf("[DATA] Reçu du serveur: %s\n", buffer);
+    printf("Reçu du serveur: %s\n", buffer);
     close(fd_in);
 
-    int fd_out = open(D2S, O_WRONLY);
-    write(fd_out, menu1, strlen(menu1) + 1);
-    close(fd_out);
+    if(buffer[0] == '1'){ 
+        int fd_out = open(D2S, O_WRONLY);
+        write(fd_out, menu1, strlen(menu1) + 1);
+        close(fd_out);
+    }
+    if(buffer[0] == '2'){
+        int fd_out = open(D2S, O_WRONLY);
+        write(fd_out, menu2, strlen(menu2) + 1);
+        close(fd_out);
+    }
+    
     return 0;
 }
