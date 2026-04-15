@@ -1,0 +1,7 @@
+Menu :
+
+  "Suchi Saumon......" 8
+  "Suchi Crevettes..." 6
+  "Suchi Thon........" 7
+  "Suchi Magicarpe..." 8
+  "Suchi Brochet....." 8
