@@ -16,9 +16,20 @@
 
 int main () {
     char buffer[512];
+    char choix[10];
+
+    printf("1 : Menu Burger Happy\n");
+    printf("2 : Menu Happy Sushi\n");
+    printf("Entrez le numero de votre choix : ");
+    
+    if (fgets(choix, sizeof(choix), stdin) == NULL) {
+        printf("Erreur de lecture.\n");
+        return 1;
+    }
+    choix[strcspn(choix, "\n")] = 0;
 
     int fd_out = open(C2S, O_WRONLY);
-    char *msg = "2";
+    char *msg = choix;
     write(fd_out, msg, strlen(msg) + 1);
     close(fd_out);
 
