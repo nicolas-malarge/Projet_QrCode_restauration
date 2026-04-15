@@ -1,0 +1,7 @@
+Menu :
+
+  "Le Classique.." 14.0
+  "Burger Country" 16.0
+  "Burger Buffalo" 16.0
+  "Le Royal......" 18.0
+  "Le BurKid....." 8.0
