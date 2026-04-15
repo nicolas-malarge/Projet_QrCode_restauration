@@ -1,4 +1,6 @@
 //serveur.c
+#include <pthread.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -10,12 +12,13 @@
 // for printf
 // for mkfifo
 // for read , write
-# define BUFFER_SIZE 512
 # define S2C "S2C.tube"
 # define C2S "C2S.tube"
 
 # define S2D "S2D.tube"
 # define D2S "D2S.tube"
+
+
 
 int main () {
     char buffer[512];
@@ -23,25 +26,35 @@ int main () {
     mkfifo(C2S, 0666);
     mkfifo(S2C, 0666);
 
-    printf("En attente du client...\n");
+    char choix[10];
+    //choix[0] = 4;
+    int fd_c2s;
+    int fd_s2d;
+    int fd_d2s;
+    int fd_s2c;
 
-    int fd_c2s = open(C2S, O_RDONLY);
-    read(fd_c2s, buffer, sizeof(buffer));
-    printf("Le client demande: %s\n", buffer);
+    while(choix[0] != '0'){
+        printf("En attente du client...\n");
+
+        int fd_c2s = open(C2S, O_RDONLY);
+        read(fd_c2s, buffer, sizeof(buffer));
+        printf("Le client demande: %s\n", buffer);
+
+        int fd_s2d = open(S2D, O_WRONLY);
+        write(fd_s2d, buffer, 1);
+
+        int fd_d2s = open(D2S, O_RDONLY);
+        read(fd_d2s, buffer, sizeof(buffer));
+
+        int fd_s2c = open(S2C, O_WRONLY);
+        write(fd_s2c, buffer, strlen(buffer) + 1);
+
+        printf(" Menu transmis au client.\n");
+    }
     close(fd_c2s);
-
-    int fd_s2d = open(S2D, O_WRONLY);
-    write(fd_s2d, buffer, 1);
     close(fd_s2d);
-
-    int fd_d2s = open(D2S, O_RDONLY);
-    read(fd_d2s, buffer, sizeof(buffer));
     close(fd_d2s);
-
-    int fd_s2c = open(S2C, O_WRONLY);
-    write(fd_s2c, buffer, strlen(buffer) + 1);
     close(fd_s2c);
-
-    printf(" Menu transmis au client.\n");
+    
     return 0;
 }
