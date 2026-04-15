@@ -1,3 +1,4 @@
+//client.c
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -17,7 +18,7 @@ int main () {
     char buffer[512];
 
     int fd_out = open(C2S, O_WRONLY);
-    char *msg = "Afficher le menu svp";
+    char *msg = "2";
     write(fd_out, msg, strlen(msg) + 1);
     close(fd_out);
 
