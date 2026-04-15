@@ -20,6 +20,7 @@ int main () {
 
     printf("1 : Menu Burger Happy\n");
     printf("2 : Menu Happy Sushi\n");
+    printf("3 : Menu Happy Sushi\n");
     printf("Entrez le numero de votre choix : ");
     
     if (fgets(choix, sizeof(choix), stdin) == NULL) {
