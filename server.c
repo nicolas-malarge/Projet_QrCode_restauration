@@ -1,3 +1,4 @@
+//serveur.c
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -16,7 +17,6 @@
 # define S2D "S2D.tube"
 # define D2S "D2S.tube"
 
-
 int main () {
     char buffer[512];
 
@@ -31,7 +31,7 @@ int main () {
     close(fd_c2s);
 
     int fd_s2d = open(S2D, O_WRONLY);
-    write(fd_s2d, "REQ_MENU", 9);
+    write(fd_s2d, buffer, 1);
     close(fd_s2d);
 
     int fd_d2s = open(D2S, O_RDONLY);
