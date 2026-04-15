@@ -46,19 +46,26 @@ int main() {
 
     struct Plat menuBurgerHappy[100];
     struct Plat menuHappySushi[100];
-    struct Plat menu3[100];
+    struct Plat menuPizzHappy[100];
 
-    ajoutStruct(menuBurgerHappy, 0, "Le Classique..", 14.0);
-    ajoutStruct(menuBurgerHappy, 1, "Burger Country", 16.0);
-    ajoutStruct(menuBurgerHappy, 2, "Burger Buffalo", 16.0);
-    ajoutStruct(menuBurgerHappy, 3, "Le Royal......", 18.0);
-    ajoutStruct(menuBurgerHappy, 4, "Le BurKid.....", 8.0);
+    ajoutStruct(menuBurgerHappy, 0, "Le Classique.....", 14.0);
+    ajoutStruct(menuBurgerHappy, 1, "Burger Country...", 16.0);
+    ajoutStruct(menuBurgerHappy, 2, "Burger Buffalo...", 16.0);
+    ajoutStruct(menuBurgerHappy, 3, "Le Royal.........", 18.0);
+    ajoutStruct(menuBurgerHappy, 4, "Le BurKid........", 8.0);
 
     ajoutStruct(menuHappySushi, 0, "Suchi Saumon......", 8);
     ajoutStruct(menuHappySushi, 1, "Suchi Crevettes...", 6);
     ajoutStruct(menuHappySushi, 2, "Suchi Thon........", 7);
     ajoutStruct(menuHappySushi, 3, "Suchi Magicarpe...", 8);
     ajoutStruct(menuHappySushi, 4, "Suchi Brochet.....", 8);
+
+    ajoutStruct(menuPizzHappy, 0, "Margharita.........", 8);
+    ajoutStruct(menuPizzHappy, 1, "Americaine.........", 13);
+    ajoutStruct(menuPizzHappy, 2, "Orientale..........", 13);
+    ajoutStruct(menuPizzHappy, 3, "Burattina..........", 13);
+    ajoutStruct(menuPizzHappy, 4, "Chèvre miel........", 14);
+    
 
     char buffer[512];
     char nPlat[200];
@@ -74,6 +81,13 @@ int main() {
         struct Plat vPlat = menuHappySushi[i];
         sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
         strcat(menu2, nPlat);
+    }
+
+    char menu3[1024] = ""; 
+    for(int i = 0; i < 5; i++){
+        struct Plat vPlat = menuPizzHappy[i];
+        sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
+        strcat(menu3, nPlat);
     }
 
     mkfifo(S2D, 0666);
@@ -96,6 +110,10 @@ int main() {
         write(fd_out, menu2, strlen(menu2) + 1);
         close(fd_out);
     }
-    
+    if(buffer[0] == '3'){
+        int fd_out = open(D2S, O_WRONLY);
+        write(fd_out, menu3, strlen(menu3) + 1);
+        close(fd_out);
+    }
     return 0;
 }
