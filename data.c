@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
+#include <bits/pthreadtypes.h>
 
 # define BUFFER_SIZE 512
 # define D2S "D2S.tube"
@@ -28,6 +29,35 @@ struct Plat {
     char plat[30];
     double prix;
 };
+
+typedef struct{
+    char filepath[256];
+    int write;
+}lecture;
+
+void* lire_fichier(void* arg){
+    lecture* args = (lecture*)arg;
+    FILE* file = fopen(args-> filepath, "r");
+
+    if (file == NULL){
+        char* erreur = "Erreur : Impossible d'ouvrir le menu du restaurant.\n";
+        write(args->write, erreur, strlen(erreur));
+        close(args->write);
+        pthread_exit(NULL);
+    }
+
+    char buffer[512];
+    size_t bytes;
+
+    while((bytes = fread(buffer, 1, sizeof(buffer), file)) > 0){
+            write(args->write , buffer, bytes);
+    }
+
+    fclose(file);
+    close(args->write);
+    pthread_exit(NULL);
+}
+
 
 void afficherMenu(struct Plat pPlat){
     //printf("Menu %s \n", );
@@ -70,6 +100,55 @@ int main() {
     char buffer[512];
     char nPlat[200];
     char menu1[1024] = "";
+    char nom_fichier[50];
+
+    if (buffer[0] == '1') {
+        strcpy(nom_fichier, "menuBurgerHappy.txt");
+    } else if (buffer[0] == '2') {
+        strcpy(nom_fichier, "menuHappySushi.txt");
+    } else if (buffer[0] == '3') {
+        strcpy(nom_fichier, "menuPizzHappy.txt");
+    } else {
+        strcpy(nom_fichier, "erreur_introuvable.txt"); 
+    }
+
+    int pipeD2S[2];
+
+    lecture args;
+    strcpy(args.filepath, nom_fichier);
+    args.write = pipeD2S[1];
+
+    pthread_t thread_id;
+    if (pthread_create(&thread_id, NULL, lire_fichier, &args) != 0) {
+        perror("Erreur création thread");
+        return 1;
+    }
+
+    close(pipeD2S[1]);
+
+    char menu_a_envoyer[4096] = "";
+    char read_buffer[1024];
+    ssize_t nbytes;
+    
+    while ((nbytes = read(pipeD2S[0], read_buffer, sizeof(read_buffer) - 1)) > 0) {
+        read_buffer[nbytes] = '\0';
+        strcat(menu_a_envoyer, read_buffer);
+    }
+    close(pipeD2S[0]); 
+
+    
+    pthread_join(thread_id, NULL);
+
+    int fd_out = open(D2S, O_WRONLY);
+    if (fd_out != -1) {
+        write(fd_out, menu_a_envoyer, strlen(menu_a_envoyer) + 1);
+        close(fd_out);
+        printf("Menu envoyé au serveur avec succès.\n");
+    } else {
+        perror("Erreur d'ouverture de D2S");
+    }
+
+
     for(int i = 0; i < 5; i++){
         struct Plat vPlat = menuBurgerHappy[i];
         sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
