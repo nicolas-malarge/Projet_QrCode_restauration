@@ -1,0 +1,7 @@
+Menu :
+
+    Margharita......... 8
+    Americaine......... 13
+    Orientale.......... 13
+    Burattina.......... 13
+    Chèvre miel........ 14
