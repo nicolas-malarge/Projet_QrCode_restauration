@@ -102,72 +102,9 @@ int main() {
     char menu1[1024] = "";
     char nom_fichier[50];
 
-    if (buffer[0] == '1') {
-        strcpy(nom_fichier, "menuBurgerHappy.txt");
-    } else if (buffer[0] == '2') {
-        strcpy(nom_fichier, "menuHappySushi.txt");
-    } else if (buffer[0] == '3') {
-        strcpy(nom_fichier, "menuPizzHappy.txt");
-    } else {
-        strcpy(nom_fichier, "erreur_introuvable.txt"); 
-    }
-
-    int pipeD2S[2];
-
-    lecture args;
-    strcpy(args.filepath, nom_fichier);
-    args.write = pipeD2S[1];
-
-    pthread_t thread_id;
-    if (pthread_create(&thread_id, NULL, lire_fichier, &args) != 0) {
-        perror("Erreur création thread");
-        return 1;
-    }
-
-    close(pipeD2S[1]);
-
     char menu_a_envoyer[4096] = "";
     char read_buffer[1024];
     ssize_t nbytes;
-    
-    while ((nbytes = read(pipeD2S[0], read_buffer, sizeof(read_buffer) - 1)) > 0) {
-        read_buffer[nbytes] = '\0';
-        strcat(menu_a_envoyer, read_buffer);
-    }
-    close(pipeD2S[0]); 
-
-    
-    pthread_join(thread_id, NULL);
-
-    int fd_out = open(D2S, O_WRONLY);
-    if (fd_out != -1) {
-        write(fd_out, menu_a_envoyer, strlen(menu_a_envoyer) + 1);
-        close(fd_out);
-        printf("Menu envoyé au serveur avec succès.\n");
-    } else {
-        perror("Erreur d'ouverture de D2S");
-    }
-
-
-    for(int i = 0; i < 5; i++){
-        struct Plat vPlat = menuBurgerHappy[i];
-        sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
-        strcat(menu1, nPlat);
-    }
-
-    char menu2[1024] = ""; 
-    for(int i = 0; i < 5; i++){
-        struct Plat vPlat = menuHappySushi[i];
-        sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
-        strcat(menu2, nPlat);
-    }
-
-    char menu3[1024] = ""; 
-    for(int i = 0; i < 5; i++){
-        struct Plat vPlat = menuPizzHappy[i];
-        sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
-        strcat(menu3, nPlat);
-    }
 
     mkfifo(S2D, 0666);
     mkfifo(D2S, 0666);
@@ -179,20 +116,93 @@ int main() {
     printf("Reçu du serveur: %s\n", buffer);
     close(fd_in);
 
-    if(buffer[0] == '1'){ 
-        int fd_out = open(D2S, O_WRONLY);
-        write(fd_out, menu1, strlen(menu1) + 1);
-        close(fd_out);
+    if (buffer[0] == '1') {
+        strcpy(nom_fichier, "menuBurgerHappy.txt");
+    } else if (buffer[0] == '2') {
+        strcpy(nom_fichier, "menuHappySushi.txt");
+    } else if (buffer[0] == '3') {
+        strcpy(nom_fichier, "menuPizzHappy.txt");
+    } else {
+        strcpy(nom_fichier, "erreur_introuvable.txt"); 
     }
-    if(buffer[0] == '2'){
-        int fd_out = open(D2S, O_WRONLY);
-        write(fd_out, menu2, strlen(menu2) + 1);
-        close(fd_out);
+
+    int pipe_ano[2];
+    if (pipe(pipe_ano) == -1) {
+        perror("Erreur création pipe");
+        return 1;
     }
-    if(buffer[0] == '3'){
-        int fd_out = open(D2S, O_WRONLY);
-        write(fd_out, menu3, strlen(menu3) + 1);
-        close(fd_out);
+
+    lecture args;
+    strcpy(args.filepath, nom_fichier);
+    args.write = pipe_ano[1];
+
+    pthread_t thread_id;
+    if (pthread_create(&thread_id, NULL, lire_fichier, &args) != 0) {
+        perror("Erreur création thread");
+        return 1;
     }
+
+    close(pipe_ano[1]);
+
+    while ((nbytes = read(pipe_ano[0], read_buffer, sizeof(read_buffer) - 1)) > 0) {
+        read_buffer[nbytes] = '\0';
+        strcat(menu_a_envoyer, read_buffer);
+    }
+    close(pipe_ano[0]);
+
+    pthread_join(thread_id, NULL);
+
+    int fd_out = open(D2S, O_WRONLY);
+    if (fd_out != -1) {
+        write(fd_out, menu_a_envoyer, strlen(menu_a_envoyer) + 1);
+        close(fd_out);
+        printf("Menu envoyé au serveur avec succès.\n");
+    } else {
+        perror("Erreur d'ouverture de D2S");
+    }
+
+    //int pipeD2S[2];
+
+    // while ((nbytes = read(S2D, read_buffer, sizeof(read_buffer) - 1)) > 0) {
+    //     read_buffer[nbytes] = '\0';
+    //     strcat(menu_a_envoyer, read_buffer);
+    // }
+    // close(S2D); 
+
+    // for(int i = 0; i < 5; i++){
+    //     struct Plat vPlat = menuBurgerHappy[i];
+    //     sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
+    //     strcat(menu1, nPlat);
+    // }
+
+    // char menu2[1024] = ""; 
+    // for(int i = 0; i < 5; i++){
+    //     struct Plat vPlat = menuHappySushi[i];
+    //     sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
+    //     strcat(menu2, nPlat);
+    // }
+
+    // char menu3[1024] = ""; 
+    // for(int i = 0; i < 5; i++){
+    //     struct Plat vPlat = menuPizzHappy[i];
+    //     sprintf(nPlat, "%d : %s %.2f \n", vPlat.idPlat, vPlat.plat, vPlat.prix);
+    //     strcat(menu3, nPlat);
+    // }
+
+    // if(buffer[0] == '1'){ 
+    //     int fd_out = open(D2S, O_WRONLY);
+    //     write(fd_out, menu1, strlen(menu1) + 1);
+    //     close(fd_out);
+    // }
+    // if(buffer[0] == '2'){
+    //     int fd_out = open(D2S, O_WRONLY);
+    //     write(fd_out, menu2, strlen(menu2) + 1);
+    //     close(fd_out);
+    // }
+    // if(buffer[0] == '3'){
+    //     int fd_out = open(D2S, O_WRONLY);
+    //     write(fd_out, menu3, strlen(menu3) + 1);
+    //     close(fd_out);
+    // }
     return 0;
 }
