@@ -1,0 +1,6 @@
+    MENU HAPPY SUSHI    
+0 : Sushi Saumon...... 8.00 euros
+1 : Sushi Crevettes... 6.00 euros
+2 : Sushi Thon........ 7.00 euros
+3 : Sushi Magicarpe... 8.00 euros
+4 : Sushi Brochet..... 8.00 euros
