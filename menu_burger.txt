@@ -1,0 +1,6 @@
+    MENU BURGER HAPPY    
+0 : Le Classique..... 14.00 euros
+1 : Burger Country... 16.00 euros
+2 : Burger Buffalo... 16.00 euros
+3 : Le Royal......... 18.00 euros
+4 : Le BurKid........ 8.00 euros
