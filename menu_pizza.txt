@@ -1,0 +1,6 @@
+        MENU PIZZ'HAPPY 
+0 : Margharita......... 8.00 euros
+1 : Americaine......... 13.00 euros
+2 : Orientale.......... 13.00 euros
+3 : Burattina.......... 13.00 euros
+4 : Chevre miel........ 14.00 euros
