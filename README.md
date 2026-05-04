@@ -4,11 +4,11 @@ L’objectif de ce projet est de simuler une application capable de lire un QR c
 
 Pour utiliser correctement l’application, suivez les étapes suivantes :
 
-Compiler une première fois le Makefile.
-Dans une première console, tapez ./server pour lancer le serveur, qui servira de routeur.
-Dans une deuxième console, tapez ./data pour lancer la base de données.
-Les deux premiers terminaux devraient être en attente de clients.
-Enfin, dans un troisième terminal, tapez ./client pour commencer.
+Compiler une première fois le Makefile.\n
+Dans une première console, tapez ./server pour lancer le serveur, qui servira de routeur.\n
+Dans une deuxième console, tapez ./data pour lancer la base de données.\n
+Les deux premiers terminaux devraient être en attente de clients.\n
+Enfin, dans un troisième terminal, tapez ./client pour commencer.\n
 
 Dans le terminal du client, celui-ci attend un choix de l’utilisateur. Entrez le code correspondant au QR code du restaurant souhaité.
 
