@@ -7,7 +7,7 @@
 #include <pthread.h>
 #define D2S "D2S.tube"
 #define S2D "S2D.tube"
-
+ 
 //on créé ce struct pour y mettre l'information que l'on va envoyer au client
 typedef struct {
     char requete[512];
