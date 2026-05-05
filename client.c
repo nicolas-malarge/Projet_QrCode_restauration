@@ -23,7 +23,7 @@ void* demanderMenu(void* pChoix) {
     char* choix = (char*)pChoix;
     char buffer[512];
     
-    // Le thread prend la clé, si un autre l'a déjà, il attend son tour
+    // Le thread prend la place, si un autre l'a déjà, il attend son tour
     pthread_mutex_lock(&mutex_tubes); 
     printf("\n(nouveau client) Envoi de la commande : %s\n", choix);
 
@@ -46,7 +46,7 @@ void* demanderMenu(void* pChoix) {
         }
         close(fichier);
     }
-    // Le thread a fini, il rend la clé pour le prochain client
+    // Le thread a fini, il rend la place pour le prochain client
     pthread_mutex_unlock(&mutex_tubes);
     // On libère la mémoire allouée pour ce choix
     free(choix); 
