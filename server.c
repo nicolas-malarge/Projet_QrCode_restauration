@@ -15,10 +15,12 @@
 
 int main () {
     char buffer[512]; 
+
     mkfifo(C2S, 0666);
     mkfifo(S2C, 0666);
     mkfifo(S2D, 0666);
     mkfifo(D2S, 0666);
+
     int fd_c2s;
     int fd_s2d;
     int fd_d2s;
@@ -46,11 +48,6 @@ int main () {
         close(fd_s2d);
         close(fd_d2s);
         close(fd_s2c);
-        
-        if (buffer[0] == '0' || strcmp(buffer, "stop") == 0) {
-            printf("Arrêt demandé.\n");
-            break;
-        }
     }
     
     return 0;
