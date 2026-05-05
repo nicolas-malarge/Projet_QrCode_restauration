@@ -11,32 +11,32 @@
 //on créé ce struct pour y mettre l'information que l'on va envoyer au client
 typedef struct {
     char requete[512];
-} ThreadArg;
+} Information;
 
-void* traiter_requete(void* arg) {
-    ThreadArg* data = (ThreadArg*)arg;
-    char buffer_reponse[1024] = "";
+void* traiterRequete(void* pRequete) {
+    Information* data = (Information*)pRequete;
+    char buffer_reponse[512] = "";
     FILE *fichier;
 
     printf("Traitement de la requête : %s\n", data->requete);
 
-    if (strcmp(data->requete, "1234 1234 0001") == 0) { 
+    if(strcmp(data->requete, "1234 1234 0001") == 0) { 
         fichier = fopen("menu_burger.txt", "r");
-    } else if (strcmp(data->requete, "1234 1234 0002") == 0) {
+    }else if(strcmp(data->requete, "1234 1234 0002") == 0) {
         fichier = fopen("menu_sushi.txt", "r");
-    } else if (strcmp(data->requete, "1234 1234 0003") == 0) {
+    }else if(strcmp(data->requete, "1234 1234 0003") == 0) {
         fichier = fopen("menu_pizza.txt", "r");
-    } else {
+    }else {
         fichier = fopen("codes_erreur.txt", "r");
     }
 
-    if (fichier != NULL) {
+    if(fichier != NULL) {
         char ligne[256];
         while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
             strcat(buffer_reponse, ligne);
         }
         fclose(fichier);
-    } else {
+    }else{
         strcpy(buffer_reponse, "Erreur : Fichier introuvable sur le serveur.\n");
     }
 
@@ -54,21 +54,22 @@ int main() {
     mkfifo(S2D, 0666);
     mkfifo(D2S, 0666);
 
-    printf("Serveur DATA en attente de requetes...\n");
+    printf("Serveur data en attente de requetes...\n");
 
     while(1) {
         int fd_in = open(S2D, O_RDONLY);
-        if (read(fd_in, buffer, sizeof(buffer)) > 0) {
+        if(read(fd_in, buffer, sizeof(buffer)) > 0) {
             
-            ThreadArg* arg = malloc(sizeof(ThreadArg));
-            strcpy(arg->requete, buffer);
+            Information* vReponse = malloc(sizeof(Information));
+            strcpy(vReponse->requete, buffer);
 
-            pthread_t thread_id;
-            pthread_create(&thread_id, NULL, traiter_requete, arg);
+            pthread_t vThread;
+            pthread_create(&vThread, NULL, traiterRequete, vReponse);
             
-            pthread_detach(thread_id); 
+            pthread_detach(vThread); 
         }
         close(fd_in);
     }
     return 0;
 }
+
