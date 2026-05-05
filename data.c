@@ -65,7 +65,6 @@ int main() {
 
             pthread_t vThread;
             pthread_create(&vThread, NULL, traiterRequete, vReponse);
-            
             pthread_detach(vThread); 
         }
         close(fd_in);
