@@ -1,5 +1,5 @@
 CC=gcc
-# On ajoute -pthread pour la compilation
+
 CFLAGS=-W -Wall -pthread 
 
 all: ExecutableServer ExecutableData ExecutableClient
